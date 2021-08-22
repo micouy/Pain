@@ -1,5 +1,5 @@
-use crate::buffer::{GuardedBuffer, Guard};
+use crate::buffer::{Guard, GuardedBuffer};
 
 pub trait Widget {
-    fn display<G>(&self, buffer: &mut GuardedBuffer<'_, G>) where G: Guard;
+    fn display(&self, buffer: &mut GuardedBuffer<'_>);
 }

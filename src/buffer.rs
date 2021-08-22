@@ -15,7 +15,7 @@ impl<'a> Buffer<'a> {
         }
     }
 
-    pub fn lend<G>(&'a mut self, guard: G) -> GuardedBuffer<'a, G> where G: Guard {
+    pub fn lend(&'a mut self, guard: Box<dyn Guard>) -> GuardedBuffer<'a> {
         GuardedBuffer::new(self, guard)
     }
 
@@ -34,22 +34,31 @@ impl<'a> Buffer<'a> {
     }
 }
 
-pub trait Guard: FnMut(usize, usize) -> bool {}
-
-impl<T> Guard for T where T: FnMut(usize, usize) -> bool {}
-
-pub struct GuardedBuffer<'a, G> where G: Guard {
-    buffer: &'a mut Buffer<'a>,
-    guard: G,
+pub trait Guard {
+    fn contains_pixel(&self, x: usize, y: usize) -> bool;
 }
 
-impl<'a, G> GuardedBuffer<'a, G> where G: Guard {
-    pub fn new(buffer: &'a mut Buffer<'a>, guard: G) -> Self {
+impl<T> Guard for T
+where
+    T: Fn(usize, usize) -> bool,
+{
+    fn contains_pixel(&self, x: usize, y: usize) -> bool {
+        (self)(x, y)
+    }
+}
+
+pub struct GuardedBuffer<'a> {
+    buffer: &'a mut Buffer<'a>,
+    guard: Box<dyn Guard>,
+}
+
+impl<'a> GuardedBuffer<'a> {
+    pub fn new(buffer: &'a mut Buffer<'a>, guard: Box<dyn Guard>) -> Self {
         Self { buffer, guard }
     }
 
     pub fn put_pixel(&mut self, x: usize, y: usize, color: Color) {
-        if (self.guard)(x, y) {
+        if self.guard.contains_pixel(x, y) {
             self.buffer.put_pixel(x, y, color);
         }
     }

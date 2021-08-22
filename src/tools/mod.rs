@@ -1,6 +1,23 @@
-mod pencil;
+use crate::{canvas::Canvas, widget::Widget};
 
-pub use pencil::Pencil;
+mod circe;
+mod penicilin;
+mod rectangel;
+
+pub use circe::Circe;
+pub use penicilin::Penicilin;
+pub use rectangel::Rectangel;
+
+pub trait Tool: Widget {
+    fn handle_press(&mut self, mouse: (isize, isize), canvas: &mut Canvas);
+    fn handle_hold(
+        &mut self,
+        prev_mouse: (isize, isize),
+        curr_mouse: (isize, isize),
+        canvas: &mut Canvas,
+    );
+    fn handle_release(&mut self, mouse: (isize, isize), canvas: &mut Canvas);
+}
 
 fn plot_line(
     (prev_x, prev_y): (isize, isize),
@@ -16,22 +33,26 @@ fn plot_line(
         let max_x = curr_x.max(prev_x);
         let m = d_y as f32 / d_x as f32;
 
-        (min_x..=max_x).map(|pixel_x| {
-            let pixel_y = prev_y as f32 + m * (pixel_x - prev_x) as f32;
-            let pixel_y = pixel_y.round() as isize;
+        (min_x..=max_x)
+            .map(|pixel_x| {
+                let pixel_y = prev_y as f32 + m * (pixel_x - prev_x) as f32;
+                let pixel_y = pixel_y.round() as isize;
 
-            (pixel_x as usize, pixel_y as usize)
-        }).collect()
+                (pixel_x as usize, pixel_y as usize)
+            })
+            .collect()
     } else {
         let min_y = curr_y.min(prev_y);
         let max_y = curr_y.max(prev_y);
         let m = d_x as f32 / d_y as f32;
 
-        (min_y..=max_y).map(|pixel_y| {
-            let pixel_x = prev_x as f32 + m * (pixel_y - prev_y) as f32;
-            let pixel_x = pixel_x.round() as isize;
+        (min_y..=max_y)
+            .map(|pixel_y| {
+                let pixel_x = prev_x as f32 + m * (pixel_y - prev_y) as f32;
+                let pixel_x = pixel_x.round() as isize;
 
-            (pixel_x as usize, pixel_y as usize)
-        }).collect()
+                (pixel_x as usize, pixel_y as usize)
+            })
+            .collect()
     }
 }

@@ -1,4 +1,9 @@
-use crate::{buffer::{GuardedBuffer, Guard}, color::Color, widget::Widget, BORDER_WIDTH};
+use crate::{
+    buffer::{Guard, GuardedBuffer},
+    color::Color,
+    widget::Widget,
+    BORDER_WIDTH,
+};
 
 pub const CANVAS_WIDTH: u32 = 200;
 pub const CANVAS_HEIGHT: u32 = 100;
@@ -15,7 +20,11 @@ impl Canvas {
     }
 
     pub fn set_pixel(&mut self, x: usize, y: usize, color: Color) {
-        if let Some(pixel) = self.inner.get_mut(y).and_then(|row| row.get_mut(x)) {
+        if let Some(pixel) = self
+            .inner
+            .get_mut(y - BORDER_WIDTH as usize)
+            .and_then(|row| row.get_mut(x - BORDER_WIDTH as usize))
+        {
             *pixel = color;
         }
     }
@@ -26,7 +35,7 @@ impl Canvas {
 }
 
 impl Widget for Canvas {
-    fn display<G>(&self, buffer: &mut GuardedBuffer<'_, G>) where G: Guard {
+    fn display(&self, buffer: &mut GuardedBuffer<'_>) {
         let offset_x = BORDER_WIDTH as usize;
         let offset_y = BORDER_WIDTH as usize;
 
