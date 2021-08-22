@@ -1,15 +1,10 @@
 use super::Tool;
-use crate::{
-    buffer::{Guard, GuardedBuffer},
-    canvas::Canvas,
-    color::Color,
-    widget::Widget,
-};
+use crate::{buffer::GuardedBuffer, canvas::Canvas, color::Color, widget::Widget};
 
 pub struct Penicilin {}
 
 impl Widget for Penicilin {
-    fn display(&self, buffer: &mut GuardedBuffer<'_>) {
+    fn display(&self, _buffer: &mut GuardedBuffer<'_>) {
         // nothing to do...
     }
 }
@@ -34,7 +29,7 @@ impl Tool for Penicilin {
             .for_each(|(x, y)| canvas.set_pixel(x, y, Color::new(0xff, 0x00, 0x00)));
     }
 
-    fn handle_release(&mut self, mouse: (isize, isize), canvas: &mut Canvas) {
+    fn handle_release(&mut self, _mouse: (isize, isize), _canvas: &mut Canvas) {
         // nothing to do...
     }
 }

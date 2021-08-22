@@ -1,12 +1,14 @@
 use crate::{canvas::Canvas, widget::Widget};
 
-mod circe;
-mod penicilin;
-mod rectangel;
+pub mod circe;
+pub mod penicilin;
+pub mod rectangel;
+pub mod linen;
 
 pub use circe::Circe;
 pub use penicilin::Penicilin;
 pub use rectangel::Rectangel;
+pub use linen::Linen;
 
 pub trait Tool: Widget {
     fn handle_press(&mut self, mouse: (isize, isize), canvas: &mut Canvas);

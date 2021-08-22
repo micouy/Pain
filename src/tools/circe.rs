@@ -1,10 +1,5 @@
 use super::Tool;
-use crate::{
-    buffer::{Guard, GuardedBuffer},
-    canvas::Canvas,
-    color::Color,
-    widget::Widget,
-};
+use crate::{buffer::GuardedBuffer, canvas::Canvas, color::Color, widget::Widget};
 
 use std::f32::consts::FRAC_1_SQRT_2;
 
@@ -33,16 +28,8 @@ impl Widget for Circe {
         let max_x = (FRAC_1_SQRT_2 * self.radius).ceil() as isize;
 
         for pixel_x in 0..=max_x {
-            let pixel_y =
-			(
-				self.radius
-				* (
-					(1.0
-					- (pixel_x as f32 / self.radius).powf(2.0)
-					).sqrt()
-				)
-			)
-            .round() as isize;
+            let pixel_y = (self.radius * ((1.0 - (pixel_x as f32 / self.radius).powf(2.0)).sqrt()))
+                .round() as isize;
 
             for (m_x, m_y) in [(1, 1), (-1, 1), (1, -1), (-1, -1)] {
                 buffer.put_pixel(
@@ -61,7 +48,7 @@ impl Widget for Circe {
 }
 
 impl Tool for Circe {
-    fn handle_press(&mut self, mouse: (isize, isize), canvas: &mut Canvas) {
+    fn handle_press(&mut self, mouse: (isize, isize), _canvas: &mut Canvas) {
         self.down = true;
         self.origin = mouse;
         self.radius = 0.0;
@@ -69,9 +56,9 @@ impl Tool for Circe {
 
     fn handle_hold(
         &mut self,
-        prev_mouse: (isize, isize),
+        _prev_mouse: (isize, isize),
         curr_mouse: (isize, isize),
-        canvas: &mut Canvas,
+        _canvas: &mut Canvas,
     ) {
         let d_x = (curr_mouse.0 - self.origin.0) as f32;
         let d_y = (curr_mouse.1 - self.origin.1) as f32;
@@ -93,15 +80,8 @@ impl Tool for Circe {
         let max_x = (FRAC_1_SQRT_2 * self.radius.abs()).ceil() as isize;
 
         for pixel_x in 0..=max_x {
-            let pixel_y =
-			(
-				self.radius.abs()
-				* (
-					(1.0
-					- (pixel_x as f32 / self.radius.abs()).powf(2.0)
-					).sqrt()
-				)
-			)
+            let pixel_y = (self.radius.abs()
+                * ((1.0 - (pixel_x as f32 / self.radius.abs()).powf(2.0)).sqrt()))
             .round() as isize;
 
             for (m_x, m_y) in [(1, 1), (-1, 1), (1, -1), (-1, -1)] {

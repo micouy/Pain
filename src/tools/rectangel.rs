@@ -1,11 +1,5 @@
 use super::Tool;
-use crate::{
-    buffer::{Guard, GuardedBuffer},
-    canvas::Canvas,
-    color::Color,
-    utils,
-    widget::Widget,
-};
+use crate::{buffer::GuardedBuffer, canvas::Canvas, color::Color, utils, widget::Widget};
 
 pub struct Rectangel {
     origin: (isize, isize),
@@ -58,7 +52,7 @@ impl Widget for Rectangel {
 }
 
 impl Tool for Rectangel {
-    fn handle_press(&mut self, (mouse_x, mouse_y): (isize, isize), canvas: &mut Canvas) {
+    fn handle_press(&mut self, (mouse_x, mouse_y): (isize, isize), _canvas: &mut Canvas) {
         self.down = true;
         self.origin = (mouse_x, mouse_y);
         self.mouse = self.origin;
@@ -66,9 +60,9 @@ impl Tool for Rectangel {
 
     fn handle_hold(
         &mut self,
-        prev_mouse: (isize, isize),
+        _prev_mouse: (isize, isize),
         curr_mouse: (isize, isize),
-        canvas: &mut Canvas,
+        _canvas: &mut Canvas,
     ) {
         self.mouse = curr_mouse;
     }

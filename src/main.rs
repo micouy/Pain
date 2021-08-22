@@ -9,6 +9,7 @@ use winit::event_loop::{ControlFlow, EventLoop};
 use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
 
+mod app;
 mod buffer;
 mod canvas;
 mod color;
@@ -16,10 +17,9 @@ mod tools;
 mod utils;
 mod widget;
 
-use buffer::Buffer;
-use canvas::{Canvas, CANVAS_HEIGHT, CANVAS_WIDTH};
-use tools::{Circe, Penicilin, Rectangel, Tool};
-use widget::Widget;
+use app::App;
+use canvas::{CANVAS_HEIGHT, CANVAS_WIDTH};
+use tools::{Circe, Penicilin, Rectangel, Linen};
 
 const BORDER_WIDTH: u32 = 1;
 const COLOR_PICKER_SIZE: u32 = 5;
@@ -27,11 +27,6 @@ const WIDTH: u32 = CANVAS_WIDTH;
 const HEIGHT: u32 = CANVAS_HEIGHT + 3 * BORDER_WIDTH + COLOR_PICKER_SIZE;
 
 const PIXEL_SCALE: f64 = 4.0;
-
-struct App {
-    canvas: Canvas,
-    tool: Box<dyn Tool>,
-}
 
 fn main() -> Result<(), Error> {
     let event_loop = EventLoop::new();
@@ -109,56 +104,11 @@ fn main() -> Result<(), Error> {
                 app.switch_tool(box Rectangel::new());
             } else if input.key_pressed(VirtualKeyCode::Key3) {
                 app.switch_tool(box Circe::new());
+            } else if input.key_pressed(VirtualKeyCode::Key4) {
+                app.switch_tool(box Linen::new());
             }
 
             window.request_redraw();
         }
     });
-}
-
-impl App {
-    fn new() -> Self {
-        Self {
-            canvas: Canvas::new(),
-            tool: box Rectangel::new(),
-        }
-    }
-
-    fn handle_press(&mut self, mouse: (isize, isize)) {
-        self.tool.handle_press(mouse, &mut self.canvas)
-    }
-
-    fn handle_hold(&mut self, prev_mouse: (isize, isize), curr_mouse: (isize, isize)) {
-        self.tool
-            .handle_hold(prev_mouse, curr_mouse, &mut self.canvas)
-    }
-
-    fn handle_release(&mut self, mouse: (isize, isize)) {
-        self.tool.handle_release(mouse, &mut self.canvas)
-    }
-
-    fn switch_tool(&mut self, tool: Box<dyn Tool>) {
-        self.tool = tool;
-    }
-
-    fn draw(&self, frame: &mut [u8]) {
-        let mut buffer = Buffer::new(frame);
-        let mut canvas_buffer = buffer.lend(box |x: usize, y: usize| {
-            let offset_x = x.checked_sub(BORDER_WIDTH as usize);
-            let offset_y = y.checked_sub(BORDER_WIDTH as usize);
-
-            let (offset_x, offset_y) =
-                if let (Some(offset_x), Some(offset_y)) = (offset_x, offset_y) {
-                    (offset_x, offset_y)
-                } else {
-                    return false;
-                };
-
-            (0..(CANVAS_WIDTH as usize)).contains(&offset_x)
-                && (0..(CANVAS_HEIGHT as usize)).contains(&offset_y)
-        });
-
-        self.canvas.display(&mut canvas_buffer);
-        self.tool.display(&mut canvas_buffer);
-    }
 }
