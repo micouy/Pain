@@ -1,10 +1,12 @@
-use super::Tool;
 use crate::{buffer::GuardedBuffer, canvas::Canvas, color::Color, widget::Widget};
+
+use super::Tool;
 
 pub struct Linen {
     origin: (isize, isize),
     mouse: (isize, isize),
     down: bool,
+    outline_color: Color,
 }
 
 impl Linen {
@@ -13,12 +15,13 @@ impl Linen {
             origin: (0, 0),
             mouse: (0, 0),
             down: false,
+            outline_color: Color::black(),
         }
     }
 }
 
 impl Widget for Linen {
-    fn display(&self, buffer: &mut GuardedBuffer<'_>) {
+    fn display(&self, buffer: &mut GuardedBuffer<'_, '_>) {
         if !self.down {
             return;
         }
@@ -51,6 +54,10 @@ impl Tool for Linen {
 
         super::plot_line(self.origin, self.mouse)
             .into_iter()
-            .for_each(|(x, y)| canvas.set_pixel(x, y, Color::new(0xff, 0xff, 0x00)));
+            .for_each(|(x, y)| canvas.set_pixel(x, y, self.outline_color));
+    }
+
+    fn set_outline_color(&mut self, outline_color: Color) {
+        self.outline_color = outline_color;
     }
 }

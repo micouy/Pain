@@ -1,11 +1,13 @@
 use crate::{color::Color, HEIGHT, WIDTH};
 
-pub struct Buffer<'a> {
-    pixels: &'a mut [u8],
+use std::ops::Range;
+
+pub struct Buffer<'p> {
+    pixels: &'p mut [u8],
 }
 
-impl<'a> Buffer<'a> {
-    pub fn new(pixels: &'a mut [u8]) -> Self {
+impl<'p> Buffer<'p> {
+    pub fn new(pixels: &'p mut [u8]) -> Self {
         Self { pixels }
     }
 
@@ -15,7 +17,7 @@ impl<'a> Buffer<'a> {
         }
     }
 
-    pub fn lend(&'a mut self, guard: Box<dyn Guard>) -> GuardedBuffer<'a> {
+    pub fn lend<'b>(&'b mut self, guard: Box<dyn Guard>) -> GuardedBuffer<'b, 'p> {
         GuardedBuffer::new(self, guard)
     }
 
@@ -47,13 +49,32 @@ where
     }
 }
 
-pub struct GuardedBuffer<'a> {
-    buffer: &'a mut Buffer<'a>,
+impl Guard for (Range<usize>, Range<usize>) {
+    fn contains_pixel(&self, x: usize, y: usize) -> bool {
+        let range_x = &self.0;
+        let range_y = &self.1;
+
+        range_x.contains(&x) && range_y.contains(&y)
+    }
+}
+
+impl Guard for ((usize, usize), (usize, usize)) {
+    fn contains_pixel(&self, x: usize, y: usize) -> bool {
+        let ((left, top), (width, height)) = *self;
+        let range_x = left..(left + width);
+        let range_y = top..(top + height);
+
+        range_x.contains(&x) && range_y.contains(&y)
+    }
+}
+
+pub struct GuardedBuffer<'b, 'p> {
+    buffer: &'b mut Buffer<'p>,
     guard: Box<dyn Guard>,
 }
 
-impl<'a> GuardedBuffer<'a> {
-    pub fn new(buffer: &'a mut Buffer<'a>, guard: Box<dyn Guard>) -> Self {
+impl<'b, 'p> GuardedBuffer<'b, 'p> {
+    pub fn new(buffer: &'b mut Buffer<'p>, guard: Box<dyn Guard>) -> Self {
         Self { buffer, guard }
     }
 

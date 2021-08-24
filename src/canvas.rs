@@ -33,7 +33,7 @@ impl Canvas {
 }
 
 impl Widget for Canvas {
-    fn display(&self, buffer: &mut GuardedBuffer<'_>) {
+    fn display(&self, buffer: &mut GuardedBuffer<'_, '_>) {
         let offset_x = BORDER_WIDTH as usize;
         let offset_y = BORDER_WIDTH as usize;
 

@@ -1,4 +1,4 @@
-use crate::{canvas::Canvas, widget::Widget};
+use crate::{canvas::Canvas, color::Color, widget::Widget};
 
 pub mod circe;
 pub mod linen;
@@ -12,17 +12,16 @@ pub use penicilin::Penicilin;
 pub use phill::Phill;
 pub use rectangel::Rectangel;
 
-#[allow(unused_variables)]
 pub trait Tool: Widget {
-    fn handle_press(&mut self, mouse: (isize, isize), canvas: &mut Canvas) {}
+    fn handle_press(&mut self, mouse: (isize, isize), canvas: &mut Canvas);
     fn handle_hold(
         &mut self,
         prev_mouse: (isize, isize),
         curr_mouse: (isize, isize),
         canvas: &mut Canvas,
-    ) {
-    }
-    fn handle_release(&mut self, mouse: (isize, isize), canvas: &mut Canvas) {}
+    );
+    fn handle_release(&mut self, mouse: (isize, isize), canvas: &mut Canvas);
+    fn set_outline_color(&mut self, color: Color);
 }
 
 fn plot_line(

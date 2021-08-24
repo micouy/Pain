@@ -1,5 +1,6 @@
-use super::Tool;
 use crate::{buffer::GuardedBuffer, canvas::Canvas, color::Color, widget::Widget};
+
+use super::Tool;
 
 use std::f32::consts::FRAC_1_SQRT_2;
 
@@ -7,6 +8,7 @@ pub struct Circe {
     origin: (isize, isize),
     radius: f32,
     down: bool,
+    outline_color: Color,
 }
 
 impl Circe {
@@ -15,12 +17,13 @@ impl Circe {
             origin: (0, 0),
             radius: 0.0,
             down: false,
+            outline_color: Color::black(),
         }
     }
 }
 
 impl Widget for Circe {
-    fn display(&self, buffer: &mut GuardedBuffer<'_>) {
+    fn display(&self, buffer: &mut GuardedBuffer<'_, '_>) {
         if !self.down || self.radius == 0.0 {
             return;
         }
@@ -35,12 +38,12 @@ impl Widget for Circe {
                 buffer.put_pixel(
                     (self.origin.0 + (m_x * pixel_x)) as usize,
                     (self.origin.1 + (m_y * pixel_y)) as usize,
-                    Color::new(0x00, 0x00, 0xff),
+                    self.outline_color,
                 );
                 buffer.put_pixel(
                     (self.origin.0 + (m_x * pixel_y)) as usize,
                     (self.origin.1 + (m_y * pixel_x)) as usize,
-                    Color::new(0x00, 0x00, 0xff),
+                    self.outline_color,
                 );
             }
         }
@@ -88,14 +91,18 @@ impl Tool for Circe {
                 canvas.set_pixel(
                     (self.origin.0 + (m_x * pixel_x)) as usize,
                     (self.origin.1 + (m_y * pixel_y)) as usize,
-                    Color::new(0x00, 0x00, 0xff),
+                    self.outline_color,
                 );
                 canvas.set_pixel(
                     (self.origin.0 + (m_x * pixel_y)) as usize,
                     (self.origin.1 + (m_y * pixel_x)) as usize,
-                    Color::new(0x00, 0x00, 0xff),
+                    self.outline_color,
                 );
             }
         }
+    }
+
+    fn set_outline_color(&mut self, outline_color: Color) {
+        self.outline_color = outline_color;
     }
 }

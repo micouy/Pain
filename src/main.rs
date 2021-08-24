@@ -13,6 +13,7 @@ mod app;
 mod buffer;
 mod canvas;
 mod color;
+mod color_picker;
 mod tools;
 mod utils;
 mod widget;
@@ -23,9 +24,8 @@ use tools::{Circe, Linen, Penicilin, Phill, Rectangel};
 
 const BORDER_WIDTH: u32 = 1;
 const COLOR_PICKER_SIZE: u32 = 5;
-const WIDTH: u32 = CANVAS_WIDTH;
+const WIDTH: u32 = CANVAS_WIDTH + 2 * BORDER_WIDTH;
 const HEIGHT: u32 = CANVAS_HEIGHT + 3 * BORDER_WIDTH + COLOR_PICKER_SIZE;
-
 const PIXEL_SCALE: f64 = 4.0;
 
 fn main() -> Result<(), Error> {
@@ -99,7 +99,7 @@ fn main() -> Result<(), Error> {
             }
 
             if input.key_pressed(VirtualKeyCode::Key1) {
-                app.switch_tool(box Penicilin {});
+                app.switch_tool(box Penicilin::new());
             } else if input.key_pressed(VirtualKeyCode::Key2) {
                 app.switch_tool(box Rectangel::new());
             } else if input.key_pressed(VirtualKeyCode::Key3) {
