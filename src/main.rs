@@ -19,7 +19,7 @@ mod widget;
 
 use app::App;
 use canvas::{CANVAS_HEIGHT, CANVAS_WIDTH};
-use tools::{Circe, Penicilin, Rectangel, Linen};
+use tools::{Circe, Linen, Penicilin, Phill, Rectangel};
 
 const BORDER_WIDTH: u32 = 1;
 const COLOR_PICKER_SIZE: u32 = 5;
@@ -106,6 +106,8 @@ fn main() -> Result<(), Error> {
                 app.switch_tool(box Circe::new());
             } else if input.key_pressed(VirtualKeyCode::Key4) {
                 app.switch_tool(box Linen::new());
+            } else if input.key_pressed(VirtualKeyCode::Key5) {
+                app.switch_tool(box Phill::new());
             }
 
             window.request_redraw();

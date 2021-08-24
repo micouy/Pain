@@ -15,20 +15,20 @@ impl Canvas {
     }
 
     pub fn set_pixel(&mut self, x: usize, y: usize, color: Color) {
-        let pixel = y.checked_sub(BORDER_WIDTH as usize)
-			.and_then(|y| x.checked_sub(BORDER_WIDTH as usize).map(|x| (x, y)))
-			.and_then(|(x, y)| self
-                .inner
-                .get_mut(y)
-                .and_then(|row| row.get_mut(x))
-            );
+        let pixel = y
+            .checked_sub(BORDER_WIDTH as usize)
+            .and_then(|y| x.checked_sub(BORDER_WIDTH as usize).map(|x| (x, y)))
+            .and_then(|(x, y)| self.inner.get_mut(y).and_then(|row| row.get_mut(x)));
         if let Some(pixel) = pixel {
             *pixel = color;
         }
     }
 
     pub fn get_pixel(&self, x: usize, y: usize) -> Option<Color> {
-        self.inner.get(y).and_then(|row| row.get(x)).copied()
+        y.checked_sub(BORDER_WIDTH as usize)
+            .and_then(|y| x.checked_sub(BORDER_WIDTH as usize).map(|x| (x, y)))
+            .and_then(|(x, y)| self.inner.get(y).and_then(|row| row.get(x)))
+            .copied()
     }
 }
 

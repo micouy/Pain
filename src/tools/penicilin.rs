@@ -1,13 +1,9 @@
 use super::Tool;
-use crate::{buffer::GuardedBuffer, canvas::Canvas, color::Color, widget::Widget};
+use crate::{canvas::Canvas, color::Color, widget::Widget};
 
 pub struct Penicilin {}
 
-impl Widget for Penicilin {
-    fn display(&self, _buffer: &mut GuardedBuffer<'_>) {
-        // nothing to do...
-    }
-}
+impl Widget for Penicilin {}
 
 impl Tool for Penicilin {
     fn handle_press(&mut self, (mouse_x, mouse_y): (isize, isize), canvas: &mut Canvas) {
@@ -27,9 +23,5 @@ impl Tool for Penicilin {
         super::plot_line(prev_mouse, curr_mouse)
             .into_iter()
             .for_each(|(x, y)| canvas.set_pixel(x, y, Color::new(0xff, 0x00, 0x00)));
-    }
-
-    fn handle_release(&mut self, _mouse: (isize, isize), _canvas: &mut Canvas) {
-        // nothing to do...
     }
 }

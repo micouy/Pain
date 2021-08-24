@@ -1,10 +1,10 @@
-use crate::{color::Color, widget::Widget, buffer::GuardedBuffer, canvas::Canvas};
 use super::Tool;
+use crate::{buffer::GuardedBuffer, canvas::Canvas, color::Color, widget::Widget};
 
 pub struct Linen {
-	origin: (isize, isize),
-	mouse: (isize, isize),
-	down: bool,
+    origin: (isize, isize),
+    mouse: (isize, isize),
+    down: bool,
 }
 
 impl Linen {
@@ -23,7 +23,7 @@ impl Widget for Linen {
             return;
         }
 
-		super::plot_line(self.origin, self.mouse)
+        super::plot_line(self.origin, self.mouse)
             .into_iter()
             .for_each(|(x, y)| buffer.put_pixel(x, y, Color::new(0xff, 0xff, 0x00)));
     }
@@ -49,7 +49,7 @@ impl Tool for Linen {
         self.mouse = mouse;
         self.down = false;
 
-		super::plot_line(self.origin, self.mouse)
+        super::plot_line(self.origin, self.mouse)
             .into_iter()
             .for_each(|(x, y)| canvas.set_pixel(x, y, Color::new(0xff, 0xff, 0x00)));
     }
