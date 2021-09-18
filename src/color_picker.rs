@@ -1,5 +1,9 @@
 use crate::{
-    buffer::GuardedBuffer, canvas::CANVAS_HEIGHT, color::Color, widget::Widget, BORDER_WIDTH,
+    buffer::GuardedBuffer,
+    canvas::CANVAS_HEIGHT,
+    color::Color,
+    widget::Widget,
+    BORDER_WIDTH,
 };
 
 pub const BUTTON_SIZE: u32 = 5;
@@ -28,8 +32,8 @@ impl ColorPicker {
         .copied()
         .enumerate()
         .map(|(i, color)| {
-            let x =
-                (BUTTON_SIZE as isize + BORDER_WIDTH as isize) * i as isize + BORDER_WIDTH as isize;
+            let x = (BUTTON_SIZE as isize + BORDER_WIDTH as isize) * i as isize
+                + BORDER_WIDTH as isize;
 
             ColorButton { color, x, y }
         })
@@ -61,7 +65,11 @@ impl Widget for ColorButton {
     fn display(&self, buffer: &mut GuardedBuffer<'_, '_>) {
         for x in 0..(BUTTON_SIZE as isize) {
             for y in 0..(BUTTON_SIZE as isize) {
-                buffer.put_pixel((x + self.x) as usize, (y + self.y) as usize, self.color);
+                buffer.put_pixel(
+                    (x + self.x) as usize,
+                    (y + self.y) as usize,
+                    self.color,
+                );
             }
         }
     }

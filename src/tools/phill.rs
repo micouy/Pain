@@ -1,4 +1,9 @@
-use crate::{buffer::GuardedBuffer, canvas::Canvas, color::Color, widget::Widget};
+use crate::{
+    buffer::GuardedBuffer,
+    canvas::Canvas,
+    color::Color,
+    widget::Widget,
+};
 
 use super::Tool;
 
@@ -42,7 +47,11 @@ impl Tool for Phill {
 
             match canvas.get_pixel(x as usize, y as usize) {
                 Some(pixel) if pixel == color => {
-                    canvas.set_pixel(x as usize, y as usize, self.outline_color);
+                    canvas.set_pixel(
+                        x as usize,
+                        y as usize,
+                        self.outline_color,
+                    );
 
                     queue.extend(
                         neighbours(x, y)
@@ -63,7 +72,8 @@ impl Tool for Phill {
     ) {
     }
 
-    fn handle_release(&mut self, _mouse: (isize, isize), _canvas: &mut Canvas) {}
+    fn handle_release(&mut self, _mouse: (isize, isize), _canvas: &mut Canvas) {
+    }
 
     fn set_outline_color(&mut self, outline_color: Color) {
         self.outline_color = outline_color;

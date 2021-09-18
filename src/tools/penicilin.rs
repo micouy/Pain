@@ -1,4 +1,9 @@
-use crate::{buffer::GuardedBuffer, canvas::Canvas, color::Color, widget::Widget};
+use crate::{
+    buffer::GuardedBuffer,
+    canvas::Canvas,
+    color::Color,
+    widget::Widget,
+};
 
 use super::Tool;
 
@@ -19,8 +24,16 @@ impl Widget for Penicilin {
 }
 
 impl Tool for Penicilin {
-    fn handle_press(&mut self, (mouse_x, mouse_y): (isize, isize), canvas: &mut Canvas) {
-        canvas.set_pixel(mouse_x as usize, mouse_y as usize, self.outline_color);
+    fn handle_press(
+        &mut self,
+        (mouse_x, mouse_y): (isize, isize),
+        canvas: &mut Canvas,
+    ) {
+        canvas.set_pixel(
+            mouse_x as usize,
+            mouse_y as usize,
+            self.outline_color,
+        );
     }
 
     fn handle_hold(
@@ -34,7 +47,8 @@ impl Tool for Penicilin {
             .for_each(|(x, y)| canvas.set_pixel(x, y, self.outline_color));
     }
 
-    fn handle_release(&mut self, _mouse: (isize, isize), _canvas: &mut Canvas) {}
+    fn handle_release(&mut self, _mouse: (isize, isize), _canvas: &mut Canvas) {
+    }
 
     fn set_outline_color(&mut self, outline_color: Color) {
         self.outline_color = outline_color;

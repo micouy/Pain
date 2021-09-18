@@ -29,7 +29,11 @@ impl App {
         }
     }
 
-    pub fn handle_hold(&mut self, prev_mouse: (isize, isize), curr_mouse: (isize, isize)) {
+    pub fn handle_hold(
+        &mut self,
+        prev_mouse: (isize, isize),
+        curr_mouse: (isize, isize),
+    ) {
         self.tool
             .handle_hold(prev_mouse, curr_mouse, &mut self.canvas);
     }

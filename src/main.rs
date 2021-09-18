@@ -3,10 +3,12 @@
 #![forbid(unsafe_code)]
 
 use pixels::{Error, Pixels, SurfaceTexture};
-use winit::dpi::LogicalSize;
-use winit::event::{Event, VirtualKeyCode};
-use winit::event_loop::{ControlFlow, EventLoop};
-use winit::window::WindowBuilder;
+use winit::{
+    dpi::LogicalSize,
+    event::{Event, VirtualKeyCode},
+    event_loop::{ControlFlow, EventLoop},
+    window::WindowBuilder,
+};
 use winit_input_helper::WinitInputHelper;
 
 mod app;
@@ -32,7 +34,10 @@ fn main() -> Result<(), Error> {
     let event_loop = EventLoop::new();
     let mut input = WinitInputHelper::new();
     let window = {
-        let size = LogicalSize::new(WIDTH as f64 * PIXEL_SCALE, HEIGHT as f64 * PIXEL_SCALE);
+        let size = LogicalSize::new(
+            WIDTH as f64 * PIXEL_SCALE,
+            HEIGHT as f64 * PIXEL_SCALE,
+        );
         WindowBuilder::new()
             .with_title("pain... t")
             .with_inner_size(size)
@@ -43,7 +48,8 @@ fn main() -> Result<(), Error> {
 
     let mut pixels = {
         let window_size = window.inner_size();
-        let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
+        let surface_texture =
+            SurfaceTexture::new(window_size.width, window_size.height, &window);
         Pixels::new(WIDTH, HEIGHT, surface_texture)?
     };
     let mut app = App::new();
@@ -59,7 +65,9 @@ fn main() -> Result<(), Error> {
         }
 
         if input.update(&event) {
-            if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
+            if
+            // input.key_pressed(VirtualKeyCode::Escape) ||
+            input.quit() {
                 *control_flow = ControlFlow::Exit;
                 return;
             }

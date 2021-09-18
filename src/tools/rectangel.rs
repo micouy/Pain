@@ -1,4 +1,10 @@
-use crate::{buffer::GuardedBuffer, canvas::Canvas, color::Color, utils, widget::Widget};
+use crate::{
+    buffer::GuardedBuffer,
+    canvas::Canvas,
+    color::Color,
+    utils,
+    widget::Widget,
+};
 
 use super::Tool;
 
@@ -27,19 +33,39 @@ impl Widget for Rectangel {
         }
 
         for x in utils::range_inclusive(self.origin.0, self.mouse.0) {
-            buffer.put_pixel(x as usize, self.origin.1 as usize, self.outline_color);
-            buffer.put_pixel(x as usize, self.mouse.1 as usize, self.outline_color);
+            buffer.put_pixel(
+                x as usize,
+                self.origin.1 as usize,
+                self.outline_color,
+            );
+            buffer.put_pixel(
+                x as usize,
+                self.mouse.1 as usize,
+                self.outline_color,
+            );
         }
 
         for y in utils::range_inclusive(self.origin.1, self.mouse.1) {
-            buffer.put_pixel(self.origin.0 as usize, y as usize, self.outline_color);
-            buffer.put_pixel(self.mouse.0 as usize, y as usize, self.outline_color);
+            buffer.put_pixel(
+                self.origin.0 as usize,
+                y as usize,
+                self.outline_color,
+            );
+            buffer.put_pixel(
+                self.mouse.0 as usize,
+                y as usize,
+                self.outline_color,
+            );
         }
     }
 }
 
 impl Tool for Rectangel {
-    fn handle_press(&mut self, (mouse_x, mouse_y): (isize, isize), _canvas: &mut Canvas) {
+    fn handle_press(
+        &mut self,
+        (mouse_x, mouse_y): (isize, isize),
+        _canvas: &mut Canvas,
+    ) {
         self.down = true;
         self.origin = (mouse_x, mouse_y);
         self.mouse = self.origin;
@@ -59,13 +85,29 @@ impl Tool for Rectangel {
         self.down = false;
 
         for x in utils::range_inclusive(self.origin.0, self.mouse.0) {
-            canvas.set_pixel(x as usize, self.origin.1 as usize, self.outline_color);
-            canvas.set_pixel(x as usize, self.mouse.1 as usize, self.outline_color);
+            canvas.set_pixel(
+                x as usize,
+                self.origin.1 as usize,
+                self.outline_color,
+            );
+            canvas.set_pixel(
+                x as usize,
+                self.mouse.1 as usize,
+                self.outline_color,
+            );
         }
 
         for y in utils::range_inclusive(self.origin.1, self.mouse.1) {
-            canvas.set_pixel(self.origin.0 as usize, y as usize, self.outline_color);
-            canvas.set_pixel(self.mouse.0 as usize, y as usize, self.outline_color);
+            canvas.set_pixel(
+                self.origin.0 as usize,
+                y as usize,
+                self.outline_color,
+            );
+            canvas.set_pixel(
+                self.mouse.0 as usize,
+                y as usize,
+                self.outline_color,
+            );
         }
     }
 

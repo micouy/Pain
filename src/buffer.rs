@@ -17,7 +17,10 @@ impl<'p> Buffer<'p> {
         }
     }
 
-    pub fn lend<'b>(&'b mut self, guard: Box<dyn Guard>) -> GuardedBuffer<'b, 'p> {
+    pub fn lend<'b>(
+        &'b mut self,
+        guard: Box<dyn Guard>,
+    ) -> GuardedBuffer<'b, 'p> {
         GuardedBuffer::new(self, guard)
     }
 
@@ -28,7 +31,8 @@ impl<'p> Buffer<'p> {
     }
 
     fn calc_pixel_ix(x: usize, y: usize) -> Option<usize> {
-        if (0..WIDTH as usize).contains(&x) && (0..HEIGHT as usize).contains(&y) {
+        if (0..WIDTH as usize).contains(&x) && (0..HEIGHT as usize).contains(&y)
+        {
             Some((x + y * WIDTH as usize) * 4)
         } else {
             None

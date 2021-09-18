@@ -1,4 +1,9 @@
-use crate::{buffer::GuardedBuffer, canvas::Canvas, color::Color, widget::Widget};
+use crate::{
+    buffer::GuardedBuffer,
+    canvas::Canvas,
+    color::Color,
+    widget::Widget,
+};
 
 use super::Tool;
 
@@ -28,12 +33,18 @@ impl Widget for Linen {
 
         super::plot_line(self.origin, self.mouse)
             .into_iter()
-            .for_each(|(x, y)| buffer.put_pixel(x, y, Color::new(0xff, 0xff, 0x00)));
+            .for_each(|(x, y)| {
+                buffer.put_pixel(x, y, Color::new(0xff, 0xff, 0x00))
+            });
     }
 }
 
 impl Tool for Linen {
-    fn handle_press(&mut self, (mouse_x, mouse_y): (isize, isize), _canvas: &mut Canvas) {
+    fn handle_press(
+        &mut self,
+        (mouse_x, mouse_y): (isize, isize),
+        _canvas: &mut Canvas,
+    ) {
         self.down = true;
         self.origin = (mouse_x, mouse_y);
         self.mouse = self.origin;
